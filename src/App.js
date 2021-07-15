@@ -1,9 +1,12 @@
 import React from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
+import { firebaseDatabase } from './backend/config/firebaseConfig';
 import AddTaskModal from './components/AddTaskModal';
 import Column from './components/Column';
 import { Container } from './styles/GlobalStyles'
+
+const dbRefference = firebaseDatabase.ref(`state`)
 
 export default class App extends React.Component {
   state = {
@@ -25,11 +28,31 @@ export default class App extends React.Component {
         taskIds: [],
       },
     },
-    // Facilitate reordering of the columns
     columnOrder: ['column-1', 'column-2', 'column-3'],
     isAddTask: false,
     workingWith: null,
   };
+
+  componentDidMount = () => {
+    dbRefference.on('value', (snapshot) => {
+      const data = snapshot.val();
+      const columns = data.columns;
+      const columnsArr = Object.keys(columns)
+      for(let column of columnsArr) {
+        const taskIds = !columns[column].taskIds ? [] : columns[column].taskIds
+        columns[column].taskIds = taskIds
+      }
+
+      this.setState(data)
+    });
+  }
+
+  // componentWillUpdate = () => {
+  //   dbRefference.on('value', (snapshot) => {
+  //     const data = snapshot.val();
+  //     this.setState(data)
+  //   });
+  // }
 
   onDragEnd = result => {
     const { destination, source, draggableId, type } = result;
@@ -54,6 +77,8 @@ export default class App extends React.Component {
         ...this.state,
         columnOrder: newColumnOrder,
       };
+
+      dbRefference.set(newState);
       this.setState(newState);
       return;
     }
@@ -79,6 +104,7 @@ export default class App extends React.Component {
         },
       };
 
+      dbRefference.set(newState);
       this.setState(newState);
       return;
     }
@@ -106,6 +132,7 @@ export default class App extends React.Component {
         [newFinish.id]: newFinish,
       },
     };
+    dbRefference.set(newState);
     this.setState(newState);
   };
 
@@ -122,9 +149,7 @@ export default class App extends React.Component {
       isAddTask: newIsAddTask,
       workingWith: workingWith,
     }
-
-    console.log(newState);
-
+    dbRefference.set(newState);
     this.setState(newState)
   }
 
@@ -133,6 +158,7 @@ export default class App extends React.Component {
       ...this.state,
       isAddTask: !this.state.isAddTask,
     }
+    dbRefference.set(newState);
     this.setState(newState)
   }
 
@@ -163,6 +189,8 @@ export default class App extends React.Component {
       tasks: currentTasks,
       isAddTask: !this.state.isAddTask,
     }
+
+    dbRefference.set(newState);
 
     this.setState(newState)
   }
