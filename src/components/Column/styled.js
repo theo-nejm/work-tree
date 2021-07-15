@@ -9,6 +9,7 @@ export const Container = styled.div`
 
   display: flex;
   flex-direction: column;
+  height: max-content;
 `;
 
 export const Title = styled.h3`
@@ -19,6 +20,5 @@ export const TaskList = styled.div`
   padding: 8px;
   background-color: ${props => props.isDraggingOver ? 'skyblue' : 'inherit'};
   transition: background-color .2s ease;
-  min-height: 6.25rem;
 `;
 

@@ -44,5 +44,5 @@ export default createGlobalStyle`
 
 export const Container = styled.div`
   display: flex;
-  height: auto;
+
 `

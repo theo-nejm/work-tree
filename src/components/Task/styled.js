@@ -8,12 +8,3 @@ export const Container = styled.div`
   background-color: ${props => (props.isDragging ? 'lightgreen' : 'white')};
   display: flex;
 `
-
-export const Handle = styled.div`
-  width: 20px;
-  height: 20px;
-  background-color: orange;
-  border-radius: .25rem;
-  margin-right: .5rem;
-  cursor: pointer;
-`
