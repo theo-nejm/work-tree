@@ -4,7 +4,7 @@ export const Container = styled.div`
   margin: 8px;
   border: 1px solid lightgrey;
   border-radius: 2px;
-  width: 10rem;
+  width: 160px !important;
   background: white;
 
   display: flex;
@@ -14,11 +14,14 @@ export const Container = styled.div`
 
 export const Title = styled.h3`
   padding: 8px;
+  background: #65abb9;
+  color: white;
+  font-size: 1.2rem;
 `;
 
 export const TaskList = styled.div`
   padding: 8px;
-  background-color: ${props => props.isDraggingOver ? 'skyblue' : 'inherit'};
+  background-color: ${props => props.isDraggingOver ? '#a9dffcaa' : 'inherit'};
   transition: background-color .2s ease;
 `;
 

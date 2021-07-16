@@ -36,7 +36,7 @@ export default function Column(props) {
             )}
           </Droppable>
           <AddTaskButton
-            index={props.index}
+            index={props.column.id}
             handleAddTask={props.handleAddTask}
             handleClickAddTask={props.handleClickAddTask}
           />

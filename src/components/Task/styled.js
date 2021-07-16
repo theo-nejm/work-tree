@@ -5,6 +5,6 @@ export const Container = styled.div`
   border-radius: .125rem;
   padding: .5rem;
   margin-bottom: .5rem;
-  background-color: ${props => (props.isDragging ? 'lightgreen' : 'white')};
+  background-color: ${props => (props.isDragging ? '#c3ffc3' : 'white')};
   display: flex;
 `

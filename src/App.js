@@ -2,9 +2,13 @@ import React from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 import { firebaseDatabase } from './backend/config/firebaseConfig';
+import resetDB from './backend/config/resetDatabase';
 import AddTaskModal from './components/AddTaskModal';
 import Column from './components/Column';
 import { Container } from './styles/GlobalStyles'
+import AddColumnBtn from './components/AddColumnBtn';
+import AddColumnInput from './components/AddColumnInput';
+
 
 const dbRefference = firebaseDatabase.ref(`state`)
 
@@ -31,6 +35,7 @@ export default class App extends React.Component {
     columnOrder: ['column-1', 'column-2', 'column-3'],
     isAddTask: false,
     workingWith: null,
+    isAddColumn: false,
   };
 
   componentDidMount = () => {
@@ -46,13 +51,6 @@ export default class App extends React.Component {
       this.setState(data)
     });
   }
-
-  // componentWillUpdate = () => {
-  //   dbRefference.on('value', (snapshot) => {
-  //     const data = snapshot.val();
-  //     this.setState(data)
-  //   });
-  // }
 
   onDragEnd = result => {
     const { destination, source, draggableId, type } = result;
@@ -140,9 +138,8 @@ export default class App extends React.Component {
     const newIsAddTask = !this.state.isAddTask
 
     const el = event.target;
-    const id = parseInt(el.id)
-    const currentColumn = this.state.columns[`column-${id+1}`]
-    const workingWith = [currentColumn, id]
+    const id = el.id;
+    const workingWith = [id]
 
     const newState = {
       ...this.state,
@@ -157,6 +154,7 @@ export default class App extends React.Component {
     const newState = {
       ...this.state,
       isAddTask: !this.state.isAddTask,
+      workingWith: null,
     }
     dbRefference.set(newState);
     this.setState(newState)
@@ -165,10 +163,9 @@ export default class App extends React.Component {
   handleAddTask = event => {
     event.preventDefault()
 
-    const id = this.state.workingWith[1]
+    const currentColumnId = [...this.state.workingWith]
     const currentColumns = {...this.state.columns}
-    const currentColumn = this.state.workingWith[0]
-    const currentOrder = currentColumn.taskIds
+    const currentColumn = currentColumns[currentColumnId]
     const currentTasks = {...this.state.tasks}
     const content = document.getElementById('task-name').value
     const newTask = {
@@ -176,22 +173,63 @@ export default class App extends React.Component {
       content: `${content}`
     }
 
-    currentTasks[`task${Object.keys(currentTasks).length + 1}`] = newTask
-    const newOrder = [...currentOrder, newTask.id]
+    console.log(currentColumn)
 
-    currentColumn.taskIds = newOrder;
-    const newColumn = currentColumn;
-    currentColumns[`column-${id+1}`] = newColumn;
+    currentTasks[`task${Object.keys(currentTasks).length + 1}`] = newTask
+    currentColumn.taskIds.push(newTask.id)
 
     const newState = {
       ...this.state,
       columns: currentColumns,
       tasks: currentTasks,
       isAddTask: !this.state.isAddTask,
+      workingWith: null,
     }
 
     dbRefference.set(newState);
 
+    this.setState(newState)
+  }
+
+
+  handleToggleColumn = () => {
+    const newState = {
+      ...this.state,
+      isAddColumn: !this.state.isAddColumn,
+    }
+
+    this.setState(newState)
+  }
+
+  handleCreateColumn = event => {
+    event.preventDefault()
+    const columnName = document.getElementById('column-name').value;
+    if(!columnName){
+      this.setState({
+        isAddColumn: !this.state.isAddColumn,
+      })
+      return;
+    };
+
+    const newColumns = {...this.state.columns};
+    const totalColumns = Object.keys(newColumns).length
+
+    newColumns[`column-${totalColumns + 1}`] = {
+      id: `column-${totalColumns + 1}`,
+      title: columnName,
+      taskIds: [],
+    }
+
+    const newColumnOrder = [...this.state.columnOrder, `column-${totalColumns + 1}`]
+
+    const newState = {
+      ...this.state,
+      isAddColumn: !this.state.isAddColumn,
+      columns: newColumns,
+      columnOrder: newColumnOrder,
+    }
+
+    dbRefference.set(newState)
     this.setState(newState)
   }
 
@@ -222,10 +260,18 @@ export default class App extends React.Component {
                 />;
               })}
               {provided.placeholder}
+              {
+                !this.state.isAddColumn ?
+                <AddColumnBtn handleClick={this.handleToggleColumn} />
+                : <AddColumnInput handleSubmit={this.handleCreateColumn}/>
+              }
             </Container>
           )}
         </Droppable>
-        {this.state.isAddTask ? <AddTaskModal closeModal={this.closeModal} handleAddTask={this.handleAddTask} /> : ''}
+        {
+          this.state.isAddTask ?
+          <AddTaskModal closeModal={this.closeModal} handleAddTask={this.handleAddTask} /> : null
+        }
       </DragDropContext>
     );
   }
