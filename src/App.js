@@ -2,12 +2,13 @@ import React from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 import { firebaseDatabase } from './backend/config/firebaseConfig';
+
+import { Container } from './styles/GlobalStyles'
+import Header from './components/Header';
 import AddTaskModal from './components/AddTaskModal';
 import Column from './components/Column';
-import { Container } from './styles/GlobalStyles'
 import AddColumnBtn from './components/AddColumnBtn';
 import AddColumnInput from './components/AddColumnInput';
-
 
 const dbRefference = firebaseDatabase.ref(`state`)
 
@@ -234,6 +235,8 @@ export default class App extends React.Component {
 
   render() {
     return (
+      <>
+      <Header />
       <DragDropContext
         onDragStart={this.onDragStart}
         onDragUpdate={this.onDragUpdate}
@@ -272,8 +275,7 @@ export default class App extends React.Component {
           <AddTaskModal closeModal={this.closeModal} handleAddTask={this.handleAddTask} /> : null
         }
       </DragDropContext>
+      </>
     );
   }
 }
-
-
