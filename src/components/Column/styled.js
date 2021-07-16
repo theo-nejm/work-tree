@@ -54,11 +54,11 @@ export const RemoveModal = styled.div`
     box-shadow: 0 0 10px rgba(255, 51, 17, .3);
 
     .text {
-      height: 6rem;
+      height: 5.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: space-between;
 
       h3 {
         font-size: 1.5rem;
