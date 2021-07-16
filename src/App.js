@@ -145,7 +145,7 @@ export default class App extends React.Component {
       isAddTask: newIsAddTask,
       workingWith: workingWith,
     }
-    dbRefference.set(newState);
+
     this.setState(newState)
   }
 
@@ -155,7 +155,7 @@ export default class App extends React.Component {
       isAddTask: !this.state.isAddTask,
       workingWith: null,
     }
-    dbRefference.set(newState);
+
     this.setState(newState)
   }
 
