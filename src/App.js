@@ -2,7 +2,6 @@ import React from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 import { firebaseDatabase } from './backend/config/firebaseConfig';
-import resetDB from './backend/config/resetDatabase';
 import AddTaskModal from './components/AddTaskModal';
 import Column from './components/Column';
 import { Container } from './styles/GlobalStyles'
