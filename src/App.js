@@ -15,27 +15,12 @@ const dbRefference = firebaseDatabase.ref(`state`)
 export default class App extends React.Component {
   state = {
     tasks: {},
-    columns: {
-      'column-1': {
-        id: 'column-1',
-        title: 'To do',
-        taskIds: [],
-      },
-      'column-2': {
-        id: 'column-2',
-        title: 'In progress',
-        taskIds: [],
-      },
-      'column-3': {
-        id: 'column-3',
-        title: 'Done',
-        taskIds: [],
-      },
-    },
-    columnOrder: ['column-1', 'column-2', 'column-3'],
+    columns: {},
+    columnOrder: [],
     isAddTask: false,
     workingWith: null,
     isAddColumn: false,
+    isEditColumn: false,
   };
 
   componentDidMount = () => {
@@ -233,6 +218,47 @@ export default class App extends React.Component {
     this.setState(newState)
   }
 
+  handleToggleEditColumn = () => {
+    const newState = {
+      ...this.state,
+      isEditColumn: !this.state.isEditColumn,
+    }
+
+    this.setState(newState)
+  }
+
+  handleEditColumn = event => {
+    event.preventDefault()
+    const columnName = document.getElementById('column-edit-name').value;
+    if(!columnName){
+      this.setState({
+        isAddColumn: !this.state.isAddColumn,
+      })
+      return;
+    };
+
+    const newColumns = {...this.state.columns};
+    const totalColumns = Object.keys(newColumns).length
+
+    newColumns[`column-${totalColumns + 1}`] = {
+      id: `column-${totalColumns + 1}`,
+      title: columnName,
+      taskIds: [],
+    }
+
+    const newColumnOrder = [...this.state.columnOrder, `column-${totalColumns + 1}`]
+
+    const newState = {
+      ...this.state,
+      isAddColumn: !this.state.isAddColumn,
+      columns: newColumns,
+      columnOrder: newColumnOrder,
+    }
+
+    dbRefference.set(newState)
+    this.setState(newState)
+  }
+
   render() {
     return (
       <>
@@ -259,13 +285,17 @@ export default class App extends React.Component {
                   tasks={tasks}
                   index={index}
                   handleClickAddTask={this.handleToggleAddTask}
+                  isEdit={this.state.isEditColumn}
                 />;
               })}
               {provided.placeholder}
               {
-                !this.state.isAddColumn ?
-                <AddColumnBtn handleClick={this.handleToggleColumn} />
-                : <AddColumnInput handleSubmit={this.handleCreateColumn}/>
+                !this.state.isAddColumn
+                ? <AddColumnBtn handleClick={this.handleToggleColumn} />
+                : <AddColumnInput
+                    handleSubmit={this.handleCreateColumn}
+                    handleBlur={this.handleToggleColumn}
+                  />
               }
             </Container>
           )}

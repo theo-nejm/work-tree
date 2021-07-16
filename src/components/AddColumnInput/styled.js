@@ -8,7 +8,7 @@ export const Form = styled.form`
   margin: 8px;
   border: 1px solid lightgrey;
   border-radius: 2px;
-  width: 10rem;
+  width: 12rem;
   background: white;
   display: flex;
   align-items: center;

@@ -38,23 +38,19 @@ export const Container = styled.header`
 `
 export const SearchWrapper = styled.form`
   box-sizing: border-box;
-
   height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  width: 35vw;
+  width: 20vw;
   max-width: 15rem;
-
   background: white;
   margin-top: 0;
-
   padding: .5rem;
-
+  border: 1px solid lightgray;
   border-radius: .25rem;
-
   position: relative;
+  margin-left: 2rem;
 
   svg {
     box-sizing: border-box;
@@ -75,9 +71,9 @@ export const SearchWrapper = styled.form`
   input {
     box-sizing: border-box;
     height: 1.6rem;
-    width: 30vw;
     margin-bottom: 0;
     padding-left: .5rem;
+    width: 20vw;
 
     border: none;
     outline: none;
