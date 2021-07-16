@@ -3,7 +3,8 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 import { firebaseDatabase } from '../../backend/config/firebaseConfig';
 
-import { Container, TaskList, Title } from './styled'
+import { RiCloseFill } from 'react-icons/ri';
+import { Container, TaskList, Title, RemoveModal } from './styled'
 import Task from '../Task';
 import AddTaskButton from '../AddTaskButton';
 import EditColumnInput from '../EditColumnInput'
@@ -14,6 +15,7 @@ export default class Column extends React.Component {
   state = {
     idEditTitle: false,
     currentTitle: this.props.column.title,
+    isAskRemove: false,
   }
 
   handleToggleEdit = () => {
@@ -25,16 +27,24 @@ export default class Column extends React.Component {
     this.setState(newState)
   }
 
+  removeSelf = async () => {
+    const dbSnapshot = (await dbRefference.get(`state`)).val()
+    dbSnapshot.columnOrder.splice(dbSnapshot.columnOrder.indexOf(this.props.column.id), 1)
+    dbRefference.set(dbSnapshot);
+  }
+
   handleEditTitle = async (event) => {
     event.preventDefault()
     const newTitle = document.querySelector(`.${this.props.column.id}`).value;
     if(!newTitle) {
+
       this.setState({
         isEditTitle: !this.state.isEditTitle,
+        isAskRemove: true,
       })
-
       return;
     }
+
     const newState = {
       currentTitle: newTitle,
       isEditTitle: !this.state.isEditTitle,
@@ -49,6 +59,7 @@ export default class Column extends React.Component {
 
   render() {
   return (
+    <>
     <Draggable draggableId={this.props.column.id} index={this.props.index}>
       {provided => (
         <Container
@@ -91,6 +102,35 @@ export default class Column extends React.Component {
         </Container>
       )}
     </Draggable>
+    {
+      this.state.isAskRemove
+      ? <RemoveModal>
+        <div className="modal-wrapper">
+          <div className="text">
+            <h3>Você tem certeza?</h3>
+            <p>
+              Confirmar irá excluir a coluna, e os {this.props.tasks.length} cards que estão nela!
+            </p>
+          </div>
+          <div className="actions">
+            <button
+              onClick={() => this.setState({ ...this.state, isAskRemove: !this.state.isAskRemove })}
+            >
+              <RiCloseFill />
+              Cancelar
+            </button>
+            <button
+              onClick={this.removeSelf}
+            >
+              Confirmar
+            </button>
+          </div>
+
+        </div>
+      </RemoveModal>
+      : null
+    }
+    </>
   );
 }
 }

@@ -20,7 +20,6 @@ export default class App extends React.Component {
     isAddTask: false,
     workingWith: null,
     isAddColumn: false,
-    isEditColumn: false,
   };
 
   componentDidMount = () => {

@@ -5,7 +5,7 @@ import styled from "styled-components";
 export const Form = styled.form`
   box-sizing: border-box;
 
-  margin: 8px;
+  margin: .5rem;
   border: 1px solid lightgrey;
   border-radius: 2px;
   width: 12rem;
