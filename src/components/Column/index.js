@@ -15,7 +15,7 @@ const dbRefference = firebaseDatabase.ref(`state`)
 export default class Column extends React.Component {
   state = {
     idEditTitle: false,
-    currentTitle: this.props.column.title,
+    currentTitle: '',
     isAskRemove: false,
   }
 
@@ -23,12 +23,15 @@ export default class Column extends React.Component {
     dbRefference.on('value', async (snapshot) => {
       const data = await snapshot.val();
       const currentColumn = data.columns[this.props.column.id];
+      const title = currentColumn.title ? currentColumn.title : null
       this.setState({
         ...this.state,
-        currentTitle: currentColumn.title,
+        currentTitle: title,
       })
     })
   }
+
+
 
   handleToggleEdit = () => {
     const newState = {
@@ -81,7 +84,6 @@ export default class Column extends React.Component {
     }
 
     const newState = {
-      currentTitle: newTitle,
       isEditTitle: !this.state.isEditTitle,
     }
     const dbSnapshot = (await dbRefference.get(`state`)).val()
