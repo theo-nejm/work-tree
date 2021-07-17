@@ -26,25 +26,21 @@ export default class App extends React.Component {
   };
 
   componentDidMount = () => {
-    try {
-      dbRefference.on('value', async (snapshot) => {
-      const data = await snapshot.val();
-      const columns = data.columns;
+    dbRefference.on('value', async (snapshot) => {
+    const data = await snapshot.val();
+    const columns = data.columns;
 
-      if(columns) {
-        const columnsArr = Object.keys(columns) ? Object.keys(columns) : null
+    if(columns) {
+      const columnsArr = Object.keys(columns) ? Object.keys(columns) : null
 
-        for(let column of columnsArr) {
-          const taskIds = !columns[column].taskIds ? [] : columns[column].taskIds
-          columns[column].taskIds = taskIds
-        }
+      for(let column of columnsArr) {
+        const taskIds = !columns[column].taskIds ? [] : columns[column].taskIds
+        columns[column].taskIds = taskIds
       }
+    }
 
       this.setState(data)
     });
-    } catch(e) {
-      console.log(e)
-    }
   }
 
   onDragEnd = result => {
@@ -219,15 +215,6 @@ export default class App extends React.Component {
     }
 
     dbRefference.set(newState)
-  }
-
-  handleToggleEditColumn = () => {
-    const newState = {
-      ...this.state,
-      isEditColumn: !this.state.isEditColumn,
-    }
-
-    this.setState(newState)
   }
 
   render() {

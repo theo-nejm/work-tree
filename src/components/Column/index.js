@@ -15,8 +15,20 @@ const dbRefference = firebaseDatabase.ref(`state`)
 export default class Column extends React.Component {
   state = {
     idEditTitle: false,
-    currentTitle: this.props.column.title,
+    currentTitle: '',
     isAskRemove: false,
+  }
+
+  componentDidMount = () => {
+    dbRefference.on('value', async (snapshot) => {
+      const data = await snapshot.val();
+      const currentColumn = data.columns[this.props.column.id];
+      const title = currentColumn.title ? currentColumn.title : null
+      this.setState({
+        ...this.state,
+        currentTitle: title,
+      })
+    })
   }
 
   handleToggleEdit = () => {
@@ -28,8 +40,8 @@ export default class Column extends React.Component {
     this.setState(newState)
   }
 
-  removeSelf = async () => {
-    const dbSnapshot = (await dbRefference.get(`state`)).val()
+  removeSelf = () => {
+    const dbSnapshot = dbRefference.get(`state`).val()
 
     if(Object.keys(dbSnapshot.columns).length <= 1) {
       toast.error('Você precisa ter pelo menos uma coluna na sua Work Tree.')
@@ -70,7 +82,6 @@ export default class Column extends React.Component {
     }
 
     const newState = {
-      currentTitle: newTitle,
       isEditTitle: !this.state.isEditTitle,
     }
     const dbSnapshot = (await dbRefference.get(`state`)).val()
@@ -156,7 +167,7 @@ export default class Column extends React.Component {
     }
     </>
   );
-}
+  }
 }
 
 
