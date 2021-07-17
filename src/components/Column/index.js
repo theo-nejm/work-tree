@@ -15,19 +15,16 @@ const dbRefference = firebaseDatabase.ref(`state`)
 export default class Column extends React.Component {
   state = {
     idEditTitle: false,
-    currentTitle: '',
+    currentTitle: this.props.column.title,
     isAskRemove: false,
   }
 
-  componentDidMount = () => {
-    dbRefference.on('value', async (snapshot) => {
-      const data = await snapshot.val();
-      const currentColumn = data.columns[this.props.column.id];
-      const title = currentColumn.title ? currentColumn.title : null
-      this.setState({
-        ...this.state,
-        currentTitle: title,
-      })
+  componentDidMount = async () => {
+    const dbSnapshot = (await dbRefference.get(`state`)).val()
+
+    this.setState({
+      ...this.state,
+      currentTitle: dbSnapshot.columns[this.props.column.id].title,
     })
   }
 
@@ -40,8 +37,8 @@ export default class Column extends React.Component {
     this.setState(newState)
   }
 
-  removeSelf = () => {
-    const dbSnapshot = dbRefference.get(`state`).val()
+  removeSelf = async () => {
+    const dbSnapshot = (await dbRefference.get(`state`)).val()
 
     if(Object.keys(dbSnapshot.columns).length <= 1) {
       toast.error('Você precisa ter pelo menos uma coluna na sua Work Tree.')
@@ -62,9 +59,12 @@ export default class Column extends React.Component {
         dbSnapshot.tasks[task] = null;
       }
     }
-    dbSnapshot.columns[this.props.column.id] = null;
 
-    console.log(dbSnapshot.columns)
+    Object.keys(dbSnapshot.columns).forEach(column => {
+      if(column === dbSnapshot.columns[this.props.column.id].id) {
+        delete dbSnapshot.columns[column];
+      }
+    })
 
     dbRefference.set(dbSnapshot);
   }
@@ -83,6 +83,7 @@ export default class Column extends React.Component {
 
     const newState = {
       isEditTitle: !this.state.isEditTitle,
+      currentTitle: newTitle,
     }
     const dbSnapshot = (await dbRefference.get(`state`)).val()
     dbSnapshot.columns[this.props.column.id].title = newTitle;
