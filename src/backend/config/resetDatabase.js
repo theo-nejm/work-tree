@@ -22,6 +22,7 @@ export default function resetDB(dbRefference) {
     isAddTask: false,
     workingWith: null,
     isAddColumn: false,
+    nOfCols: 3,
   };
 
   dbRefference.set(state);

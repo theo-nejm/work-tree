@@ -14,6 +14,7 @@ export const Container = styled.header`
 
   position: fixed;
   width: 100vw;
+  backface-visibility: hidden;
 
   h2 {
     display: flex;

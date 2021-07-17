@@ -27,13 +27,20 @@ export const Form = styled.form`
   }
 
   input {
-    width: 100%;
-    border: none;
-    outline: none;
-    background: none;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: white;
-  }
+      height: max-content;
+      width: 10rem;
+      border: none;
+      outline: none;
+      background: none;
+
+      padding: .5rem;
+
+      margin-left: -.5rem;
+
+      color: white;
+      font-weight: 500;
+      font-size: 1.2rem;
+    }
 `

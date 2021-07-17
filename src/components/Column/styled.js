@@ -51,8 +51,6 @@ export const RemoveModal = styled.div`
     border-radius: .25rem;
     padding: 1rem 1.5rem;
 
-    box-shadow: 0 0 10px rgba(255, 51, 17, .3);
-
     .text {
       height: 5.5rem;
       display: flex;

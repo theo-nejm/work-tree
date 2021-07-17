@@ -1,5 +1,7 @@
 import React from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { firebaseDatabase } from './backend/config/firebaseConfig';
 
@@ -20,20 +22,29 @@ export default class App extends React.Component {
     isAddTask: false,
     workingWith: null,
     isAddColumn: false,
+    nOfCols: 0,
   };
 
   componentDidMount = () => {
-    dbRefference.on('value', (snapshot) => {
-      const data = snapshot.val();
+    try {
+      dbRefference.on('value', async (snapshot) => {
+      const data = await snapshot.val();
       const columns = data.columns;
-      const columnsArr = Object.keys(columns)
-      for(let column of columnsArr) {
-        const taskIds = !columns[column].taskIds ? [] : columns[column].taskIds
-        columns[column].taskIds = taskIds
+
+      if(columns) {
+        const columnsArr = Object.keys(columns) ? Object.keys(columns) : null
+
+        for(let column of columnsArr) {
+          const taskIds = !columns[column].taskIds ? [] : columns[column].taskIds
+          columns[column].taskIds = taskIds
+        }
       }
 
       this.setState(data)
     });
+    } catch(e) {
+      console.log(e)
+    }
   }
 
   onDragEnd = result => {
@@ -61,7 +72,6 @@ export default class App extends React.Component {
       };
 
       dbRefference.set(newState);
-      this.setState(newState);
       return;
     }
 
@@ -87,7 +97,6 @@ export default class App extends React.Component {
       };
 
       dbRefference.set(newState);
-      this.setState(newState);
       return;
     }
 
@@ -115,7 +124,6 @@ export default class App extends React.Component {
       },
     };
     dbRefference.set(newState);
-    this.setState(newState);
   };
 
   handleToggleAddTask = event => {
@@ -157,8 +165,6 @@ export default class App extends React.Component {
       content: `${content}`
     }
 
-    console.log(currentColumn)
-
     currentTasks[`task${Object.keys(currentTasks).length + 1}`] = newTask
     currentColumn.taskIds.push(newTask.id)
 
@@ -171,10 +177,7 @@ export default class App extends React.Component {
     }
 
     dbRefference.set(newState);
-
-    this.setState(newState)
   }
-
 
   handleToggleColumn = () => {
     const newState = {
@@ -196,25 +199,26 @@ export default class App extends React.Component {
     };
 
     const newColumns = {...this.state.columns};
-    const totalColumns = Object.keys(newColumns).length
+    const currentTotalColumns = this.state.nOfCols
+    const newTotalColumns = currentTotalColumns + 1
 
-    newColumns[`column-${totalColumns + 1}`] = {
-      id: `column-${totalColumns + 1}`,
+    newColumns[`column-${currentTotalColumns + 1}`] = {
+      id: `column-${currentTotalColumns + 1}`,
       title: columnName,
       taskIds: [],
     }
 
-    const newColumnOrder = [...this.state.columnOrder, `column-${totalColumns + 1}`]
+    const newColumnOrder = [...this.state.columnOrder, `column-${currentTotalColumns + 1}`]
 
     const newState = {
       ...this.state,
       isAddColumn: !this.state.isAddColumn,
       columns: newColumns,
       columnOrder: newColumnOrder,
+      nOfCols: newTotalColumns,
     }
 
     dbRefference.set(newState)
-    this.setState(newState)
   }
 
   handleToggleEditColumn = () => {
@@ -226,41 +230,10 @@ export default class App extends React.Component {
     this.setState(newState)
   }
 
-  handleEditColumn = event => {
-    event.preventDefault()
-    const columnName = document.getElementById('column-edit-name').value;
-    if(!columnName){
-      this.setState({
-        isAddColumn: !this.state.isAddColumn,
-      })
-      return;
-    };
-
-    const newColumns = {...this.state.columns};
-    const totalColumns = Object.keys(newColumns).length
-
-    newColumns[`column-${totalColumns + 1}`] = {
-      id: `column-${totalColumns + 1}`,
-      title: columnName,
-      taskIds: [],
-    }
-
-    const newColumnOrder = [...this.state.columnOrder, `column-${totalColumns + 1}`]
-
-    const newState = {
-      ...this.state,
-      isAddColumn: !this.state.isAddColumn,
-      columns: newColumns,
-      columnOrder: newColumnOrder,
-    }
-
-    dbRefference.set(newState)
-    this.setState(newState)
-  }
-
   render() {
     return (
       <>
+      <ToastContainer autoClose={5000} className="toast-container" />
       <Header />
       <DragDropContext
         onDragStart={this.onDragStart}

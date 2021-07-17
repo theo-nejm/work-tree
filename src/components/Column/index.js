@@ -1,5 +1,6 @@
 import React from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { toast } from 'react-toastify';
 
 import { firebaseDatabase } from '../../backend/config/firebaseConfig';
 
@@ -29,7 +30,30 @@ export default class Column extends React.Component {
 
   removeSelf = async () => {
     const dbSnapshot = (await dbRefference.get(`state`)).val()
+
+    if(Object.keys(dbSnapshot.columns).length <= 1) {
+      toast.error('Você precisa ter pelo menos uma coluna na sua Work Tree.')
+      this.setState({
+        ...this.state,
+        isAskRemove: false,
+      })
+
+      return;
+    }
+
     dbSnapshot.columnOrder.splice(dbSnapshot.columnOrder.indexOf(this.props.column.id), 1)
+
+    const tasksToDelete = dbSnapshot.columns[this.props.column.id].taskIds ? dbSnapshot.columns[this.props.column.id].taskIds : null
+
+    if(dbSnapshot.tasks && tasksToDelete) {
+      for(let task of tasksToDelete) {
+        dbSnapshot.tasks[task] = null;
+      }
+    }
+    dbSnapshot.columns[this.props.column.id] = null;
+
+    console.log(dbSnapshot.columns)
+
     dbRefference.set(dbSnapshot);
   }
 
@@ -109,7 +133,7 @@ export default class Column extends React.Component {
           <div className="text">
             <h3>Você tem certeza?</h3>
             <p>
-              Confirmar irá excluir a coluna, e os {this.props.tasks.length} cards que estão nela!
+              Confirmar irá excluir a coluna e os {this.props.tasks.length} cards que estão nela!
             </p>
           </div>
           <div className="actions">
