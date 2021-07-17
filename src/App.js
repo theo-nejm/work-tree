@@ -221,15 +221,6 @@ export default class App extends React.Component {
     dbRefference.set(newState)
   }
 
-  handleToggleEditColumn = () => {
-    const newState = {
-      ...this.state,
-      isEditColumn: !this.state.isEditColumn,
-    }
-
-    this.setState(newState)
-  }
-
   render() {
     return (
       <>

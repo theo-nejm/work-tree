@@ -19,6 +19,17 @@ export default class Column extends React.Component {
     isAskRemove: false,
   }
 
+  componentDidMount = () => {
+    dbRefference.on('value', async (snapshot) => {
+      const data = await snapshot.val();
+      const currentColumn = data.columns[this.props.column.id];
+      this.setState({
+        ...this.state,
+        currentTitle: currentColumn.title,
+      })
+    })
+  }
+
   handleToggleEdit = () => {
     const newState = {
       ...this.state,
@@ -156,7 +167,7 @@ export default class Column extends React.Component {
     }
     </>
   );
-}
+  }
 }
 
 
