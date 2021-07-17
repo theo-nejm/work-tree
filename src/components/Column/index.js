@@ -9,6 +9,7 @@ import { Container, TaskList, Title, RemoveModal } from './styled'
 import Task from '../Task';
 import AddTaskButton from '../AddTaskButton';
 import EditColumnInput from '../EditColumnInput'
+import EditTaskModal from '../EditTaskModal';
 
 const dbRefference = firebaseDatabase.ref(`state`)
 
@@ -17,11 +18,12 @@ export default class Column extends React.Component {
     idEditTitle: false,
     currentTitle: '',
     isAskRemove: false,
+    isEditTask: false,
+    workingWith: '',
   }
 
   componentDidMount = async () => {
     const dbSnapshot = (await dbRefference.get(`state`)).val()
-
     this.setState({
       ...this.state,
       currentTitle: dbSnapshot.columns[this.props.column.id].title,
@@ -65,15 +67,13 @@ export default class Column extends React.Component {
         delete dbSnapshot.columns[column];
       }
     })
-
     dbRefference.set(dbSnapshot);
   }
 
-  handleEditTitle = async (event) => {
+  handleEditTitle = async event => {
     event.preventDefault()
     const newTitle = document.querySelector(`.${this.props.column.id}`).value;
     if(!newTitle) {
-
       this.setState({
         isEditTitle: !this.state.isEditTitle,
         isAskRemove: true,
@@ -85,12 +85,51 @@ export default class Column extends React.Component {
       isEditTitle: !this.state.isEditTitle,
       currentTitle: newTitle,
     }
+
     const dbSnapshot = (await dbRefference.get(`state`)).val()
     dbSnapshot.columns[this.props.column.id].title = newTitle;
     const newData = dbSnapshot;
 
     dbRefference.set(newData)
     this.setState(newState)
+  }
+
+  handleOpenModal = (event) => {
+    let newState = {
+      ...this.state,
+      isEditTask: !this.props.isEditTask,
+    }
+
+    const tasks = this.props.tasks
+    tasks.forEach(task => {
+      if(task.id === event.target.id) {
+        newState.workingWith = tasks[tasks.indexOf(task)]
+      }
+    })
+
+    this.setState(newState)
+  }
+
+  handleCloseModal = () => {
+    this.setState({
+      ...this.state,
+      isEditTask: false,
+    })
+  }
+
+  handleEditTask = async event => {
+    event.preventDefault()
+
+    const dbSnapshot = (await dbRefference.get(`state`)).val()
+
+    const newContent = document.getElementById(`edit-${this.state.workingWith.id}`).value
+    dbSnapshot.tasks[this.state.workingWith.id].content = newContent
+
+    this.setState({
+      ...this.state,
+      isEditTask: false,
+    })
+    dbRefference.set(dbSnapshot)
   }
 
   render() {
@@ -124,7 +163,12 @@ export default class Column extends React.Component {
                 isDraggingOver={snapshot.isDraggingOver}
               >
                 {this.props.tasks.map((task, index) => (
-                  <Task key={task.id} task={task} index={index} />
+                  <Task
+                    key={task.id}
+                    task={task}
+                    index={index}
+                    handleClick={this.handleOpenModal}
+                  />
                 ))}
                 {provided.placeholder}
               </TaskList>
@@ -166,9 +210,17 @@ export default class Column extends React.Component {
       </RemoveModal>
       : null
     }
+        {
+          this.state.isEditTask
+          ? <EditTaskModal
+            closeModal={this.handleCloseModal}
+            workingWith={this.state.workingWith}
+            handleSubmit={this.handleEditTask}
+          />
+          : null
+        }
     </>
   );
   }
 }
-
 
