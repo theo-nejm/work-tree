@@ -15,7 +15,7 @@ const dbRefference = firebaseDatabase.ref(`state`)
 export default class Column extends React.Component {
   state = {
     idEditTitle: false,
-    currentTitle: this.props.column.title,
+    currentTitle: '',
     isAskRemove: false,
   }
 
