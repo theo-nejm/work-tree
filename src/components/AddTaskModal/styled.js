@@ -20,7 +20,7 @@ export const Container = styled.div`
     transform: translateX(-50%) translateY(-50%);
 
     width: 16rem;
-    height: 10rem;
+    height: 12rem;
 
     background: white;
 
@@ -28,6 +28,8 @@ export const Container = styled.div`
     align-items: center;
     flex-direction: column;
     justify-content: space-between;
+
+    gap: .5rem;
 
     padding: 1rem;
 

@@ -42,6 +42,7 @@ export default class Column extends React.Component {
   removeSelf = async () => {
     const dbSnapshot = (await dbRefference.get(`state`)).val()
 
+    // console.log(Object.keys(dbSnapshot.columns))
     if(Object.keys(dbSnapshot.columns).length <= 1) {
       toast.error('Você precisa ter pelo menos uma coluna na sua Work Tree.')
       this.setState({
@@ -64,6 +65,7 @@ export default class Column extends React.Component {
 
     Object.keys(dbSnapshot.columns).forEach(column => {
       if(column === dbSnapshot.columns[this.props.column.id].id) {
+        dbSnapshot.columns[column] = null;
         delete dbSnapshot.columns[column];
       }
     })
@@ -146,7 +148,7 @@ export default class Column extends React.Component {
           {
             !this.state.isEditTitle ?
             <Title onClick={this.handleToggleEdit} {...provided.dragHandleProps}>
-            {this.state.currentTitle}
+            {this.props.column.title}
             </Title> :
             <EditColumnInput
               handleBlur={this.handleToggleEdit}

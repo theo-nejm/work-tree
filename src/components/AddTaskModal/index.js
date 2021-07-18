@@ -11,6 +11,7 @@ export default function AddTaskModal(props) {
         <form onSubmit={props.handleAddTask}>
           <h3>Adicionar card</h3>
           <input type="text" autoFocus id="task-name" />
+          <input type="date" id="task-date" />
           <div className="actions">
             <button type="button" onClick={props.closeModal}>
               <RiCloseFill className="icon" />

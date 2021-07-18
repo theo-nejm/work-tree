@@ -7,4 +7,5 @@ export const Container = styled.div`
   margin-bottom: .5rem;
   background-color: ${props => (props.isDragging ? '#c3ffc3' : 'white')};
   display: flex;
+  flex-direction: column;
 `

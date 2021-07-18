@@ -156,9 +156,12 @@ export default class App extends React.Component {
     const currentColumn = currentColumns[currentColumnId]
     const currentTasks = {...this.state.tasks}
     const content = document.getElementById('task-name').value
+    const date = document.getElementById('task-date').value
+
     const newTask = {
       id: `task${Object.keys(currentTasks).length + 1}`,
-      content: `${content}`
+      content: content,
+      date: date,
     }
 
     currentTasks[`task${Object.keys(currentTasks).length + 1}`] = newTask
