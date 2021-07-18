@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   box-sizing: border-box;
-  background: ${props => props.color};
-  color: ${props => props.bgColor};
+  background: ${props => props.bgColor};
+  color: ${props => props.color};
   height: 1.4rem;
   width: max-content;
   border: 1px solid lightgray;

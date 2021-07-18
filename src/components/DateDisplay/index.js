@@ -24,12 +24,25 @@ export default function DateDisplay(props) {
     return true;
   }
 
-  const color = verifyDeadline() ? 'none' : '#cf0524';
-  const bgColor = verifyDeadline() ? 'inherit' : 'white';
+  let bgColor, color;
+  if(props.isChecked) {
+    bgColor = '#4bb543';
+    color = 'white';
+  } else if(!verifyDeadline()) {
+    bgColor = '#cf0524';
+    color = 'white';
+  } else {
+    bgColor = 'none';
+    color = 'inherit';
+  }
 
   return (
     <Container color={color} bgColor={bgColor}>
-      <input type="checkbox" />
+      <input
+        type="checkbox"
+        id={`check-${props.taskId}`}
+        onChange={props.checkTask}
+      />
       <AiOutlineClockCircle />
       {props.date}
     </Container>

@@ -175,6 +175,7 @@ export default class Column extends React.Component {
                     index={index}
                     handleClick={this.handleOpenModal}
                     currentDate={this.state.currentDate.toLocaleDateString()}
+                    checkTask={this.handleCompleteTask}
                   />
                 ))}
                 {provided.placeholder}
