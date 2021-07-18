@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 
 import { firebaseDatabase } from '../../backend/config/firebaseConfig';
 
+import { FaTrashAlt } from 'react-icons/fa'
 import { RiCloseFill } from 'react-icons/ri';
 import { Container, TaskList, Title, RemoveModal } from './styled'
 import Task from '../Task';
@@ -128,11 +129,34 @@ export default class Column extends React.Component {
     const newContent = document.getElementById(`edit-${this.state.workingWith.id}`).value
     const newDate = document.getElementById(`edit-${this.state.workingWith.id}-date`).value
 
+    if(!newContent) {
+      toast.error('Não é possível retirar o nome do card.')
+      this.setState({
+        ...this.state,
+        isEditTask: false,
+      })
+
+      return;
+    }
+
     currentTask.content = newContent ? newContent : null;
     currentTask.date = newDate ? newDate : null;
 
     this.setState({
       ...this.state,
+      isEditTask: false,
+    })
+    dbRefference.set(dbSnapshot)
+  }
+
+  handleDeleteTask = async event => {
+    const dbSnapshot = (await dbRefference.get(`state`)).val()
+    const id = event.target.id.replace('delete-', '')
+    const column = this.props.column.id
+    delete dbSnapshot.tasks[id]
+    dbSnapshot.columns[column].taskIds.splice(dbSnapshot.columns[column].taskIds.indexOf(id), 1)
+
+    this.setState({
       isEditTask: false,
     })
     dbRefference.set(dbSnapshot)
@@ -158,6 +182,7 @@ export default class Column extends React.Component {
               handleBlur={this.handleToggleEdit}
               handleSubmit={this.handleEditTitle}
               classValue={this.props.column.id}
+              colName={this.props.column.title}
             />
           }
           <Droppable droppableId={this.props.column.id} type="task">
@@ -210,6 +235,7 @@ export default class Column extends React.Component {
             <button
               onClick={this.removeSelf}
             >
+              <FaTrashAlt />
               Confirmar
             </button>
           </div>
@@ -225,6 +251,7 @@ export default class Column extends React.Component {
             closeModal={this.handleCloseModal}
             workingWith={this.state.workingWith}
             handleSubmit={this.handleEditTask}
+            handleDelete={this.handleDeleteTask}
           />
           : null
         }

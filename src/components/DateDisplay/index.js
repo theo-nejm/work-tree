@@ -42,6 +42,7 @@ export default function DateDisplay(props) {
         type="checkbox"
         id={`check-${props.taskId}`}
         onChange={props.checkTask}
+        checked={props.isChecked ? true : false}
       />
       <AiOutlineClockCircle />
       {props.date}

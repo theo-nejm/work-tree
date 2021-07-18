@@ -106,6 +106,10 @@ export const RemoveModal = styled.div`
         background: #ff2211;
         border: none;
         color: white;
+        svg {
+          font-size: 1rem;
+          margin-right: .25rem;
+        }
       }
     }
   }

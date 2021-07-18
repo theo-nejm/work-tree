@@ -9,7 +9,7 @@ export default function EditColumnInput(props) {
           type="text"
           autoFocus
           onBlur={props.handleBlur}
-
+          defaultValue={props.colName}
           className={props.classValue}
         />
       </form>

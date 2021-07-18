@@ -9,7 +9,17 @@ export default function EditTaskModal(props) {
     <Container>
       <div className="modal-box">
         <form onSubmit={props.handleSubmit}>
-          <h3>Editar card</h3>
+          <div className="header">
+            <h3>Editar card</h3>
+            <button
+              className="delete"
+              onClick={props.handleDelete}
+              id={`delete-${props.workingWith.id}`}
+              type='button'
+            >
+              apagar
+            </button>
+          </div>
           <input
             type="text"
             autoFocus

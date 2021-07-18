@@ -33,6 +33,32 @@ export const Container = styled.div`
 
     border-radius: .25rem;
 
+    .header {
+      box-sizing: border-box;
+
+      display: flex;
+      align-items: center;
+
+      justify-content: space-between;
+
+      width: 100%;
+      .delete {
+        height: 1.8rem;
+        width: max-content;
+        background: white;
+
+        border: 2px solid red;
+
+        color: red;
+
+        svg {
+          color: red;
+          cursor: pointer;
+          font-size: 1.1rem;
+        }
+      }
+    }
+
     input {
       height: 2rem;
       width: 100%;

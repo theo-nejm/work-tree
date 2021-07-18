@@ -25,6 +25,7 @@ export default class App extends React.Component {
     workingWith: null,
     isAddColumn: false,
     nOfCols: 0,
+    nOfTasks: 0,
   };
 
   componentDidMount = () => {
@@ -157,6 +158,7 @@ export default class App extends React.Component {
     const currentColumns = {...this.state.columns}
     const currentColumn = currentColumns[currentColumnId]
     const currentTasks = {...this.state.tasks}
+    const currentTotalTasks = this.state.nOfTasks;
     const content = document.getElementById('task-name').value
     const date = document.getElementById('task-date').value
 
@@ -172,12 +174,13 @@ export default class App extends React.Component {
     }
 
     const newTask = {
-      id: `task${Object.keys(currentTasks).length + 1}`,
+      id: `task${currentTotalTasks + 1}`,
       content: content,
       date: date,
     }
 
-    currentTasks[`task${Object.keys(currentTasks).length + 1}`] = newTask
+    currentTasks[newTask.id] = newTask
+    console.log(currentTasks)
     currentColumn.taskIds.push(newTask.id)
 
     const newState = {
@@ -186,6 +189,7 @@ export default class App extends React.Component {
       tasks: currentTasks,
       isAddTask: !this.state.isAddTask,
       workingWith: null,
+      nOfTasks: this.state.nOfTasks + 1,
     }
 
     dbRefference.set(newState);
@@ -237,7 +241,7 @@ export default class App extends React.Component {
     return (
       <>
       <ToastContainer autoClose={5000} className="toast-container" />
-      <Header />
+      <Header tasks={this.state.tasks} />
       <DragDropContext
         onDragStart={this.onDragStart}
         onDragUpdate={this.onDragUpdate}
