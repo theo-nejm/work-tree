@@ -5,9 +5,8 @@ import DateDisplay from '../DateDisplay';
 
 export default function Task(props) {
   function formatDate(date) {
-    const splittedDate = date.split('-')
-    const orderedDate = splittedDate.reverse()
-    return orderedDate.join('/')
+    const splittedDate = date.split('-'), orderedDate = splittedDate.reverse()
+    return orderedDate.join('/');
   }
 
   return (
@@ -19,13 +18,20 @@ export default function Task(props) {
           innerRef={provided.innerRef}
           ref={provided.innerRef}
           isDragging={snapshot.isDragging}
-          onClick={props.handleClick}
-          id={props.task.id}
         >
-          {props.task.content}
+          <div
+            className="clickable"
+            onClick={props.handleClick}
+            id={props.task.id}
+          >
+            {props.task.content}
+          </div>
           {
             props.task.date ?
-            <DateDisplay date={formatDate(props.task.date)}/> :
+            <DateDisplay
+              date={formatDate(props.task.date)}
+              currentDate={props.currentDate}
+            /> :
             null
           }
         </Container>

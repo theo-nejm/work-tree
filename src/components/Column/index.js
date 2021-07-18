@@ -20,6 +20,7 @@ export default class Column extends React.Component {
     isAskRemove: false,
     isEditTask: false,
     workingWith: '',
+    currentDate: new Date(),
   }
 
   componentDidMount = async () => {
@@ -173,6 +174,7 @@ export default class Column extends React.Component {
                     task={task}
                     index={index}
                     handleClick={this.handleOpenModal}
+                    currentDate={this.state.currentDate.toLocaleDateString()}
                   />
                 ))}
                 {provided.placeholder}
