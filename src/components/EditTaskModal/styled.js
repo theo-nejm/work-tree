@@ -20,7 +20,7 @@ export const Container = styled.div`
     transform: translateX(-50%) translateY(-50%);
 
     width: 16rem;
-    height: 10rem;
+    height: 12rem;
 
     background: white;
 

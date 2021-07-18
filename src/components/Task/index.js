@@ -22,7 +22,7 @@ export default function Task(props) {
           onClick={props.handleClick}
           id={props.task.id}
         >
-          <p>{props.task.content}</p>
+          {props.task.content}
           {
             props.task.date ?
             <DateDisplay date={formatDate(props.task.date)}/> :

@@ -96,12 +96,11 @@ export default class Column extends React.Component {
     this.setState(newState)
   }
 
-  handleOpenModal = (event) => {
+  handleOpenModal = event => {
     let newState = {
       ...this.state,
-      isEditTask: !this.props.isEditTask,
+      isEditTask: !this.state.isEditTask,
     }
-
     const tasks = this.props.tasks
     tasks.forEach(task => {
       if(task.id === event.target.id) {
@@ -123,9 +122,13 @@ export default class Column extends React.Component {
     event.preventDefault()
 
     const dbSnapshot = (await dbRefference.get(`state`)).val()
+    const currentTask = dbSnapshot.tasks[this.state.workingWith.id]
 
     const newContent = document.getElementById(`edit-${this.state.workingWith.id}`).value
-    dbSnapshot.tasks[this.state.workingWith.id].content = newContent
+    const newDate = document.getElementById(`edit-${this.state.workingWith.id}-date`).value
+
+    currentTask.content = newContent ? newContent : null;
+    currentTask.date = newDate ? newDate : null;
 
     this.setState({
       ...this.state,
@@ -214,7 +217,8 @@ export default class Column extends React.Component {
     }
         {
           this.state.isEditTask
-          ? <EditTaskModal
+          ?
+          <EditTaskModal
             closeModal={this.handleCloseModal}
             workingWith={this.state.workingWith}
             handleSubmit={this.handleEditTask}

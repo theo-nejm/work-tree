@@ -16,6 +16,11 @@ export default function EditTaskModal(props) {
             id={`edit-${props.workingWith.id}`}
             defaultValue={props.workingWith.content}
           />
+          <input
+            type="date"
+            id={`edit-${props.workingWith.id}-date`}
+            defaultValue={props.workingWith.date}
+          />
           <div className="actions">
             <button type="button" onClick={props.closeModal}>
               <RiCloseFill className="icon" />

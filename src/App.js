@@ -1,6 +1,6 @@
 import React from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { firebaseDatabase } from './backend/config/firebaseConfig';
@@ -11,8 +11,10 @@ import AddTaskModal from './components/AddTaskModal';
 import Column from './components/Column';
 import AddColumnBtn from './components/AddColumnBtn';
 import AddColumnInput from './components/AddColumnInput';
+// import resetDB from './backend/config/resetDatabase';
 
 const dbRefference = firebaseDatabase.ref(`state`)
+// resetDB(dbRefference)
 
 export default class App extends React.Component {
   state = {
@@ -157,6 +159,17 @@ export default class App extends React.Component {
     const currentTasks = {...this.state.tasks}
     const content = document.getElementById('task-name').value
     const date = document.getElementById('task-date').value
+
+    if(!content) {
+      toast.error('Não é possível criar um card sem nome.')
+
+      this.setState({
+        ...this.state,
+        isAddTask: !this.state.isAddTask,
+        workingWith: null,
+      })
+      return;
+    }
 
     const newTask = {
       id: `task${Object.keys(currentTasks).length + 1}`,
