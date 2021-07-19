@@ -18,3 +18,6 @@
 
 ### ➸ As a drag and drop users' experience, it uses react-beautiful-dnd, and because of its documentation, uses some class components too.
 
+### ➸ To style the project, was used react styled-components and some icons was used from react-icons lib.
+
+### ➸ To show the notifications, was used react-toastify.
