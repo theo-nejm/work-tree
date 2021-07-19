@@ -65,9 +65,11 @@ export default class Column extends React.Component {
     }
 
     Object.keys(dbSnapshot.columns).forEach(column => {
+
       if(column === dbSnapshot.columns[this.props.column.id].id) {
-        dbSnapshot.columns[column] = null;
-        delete dbSnapshot.columns[column];
+        delete dbSnapshot.columns[column]
+        dbRefference.set(dbSnapshot);
+        return;
       }
     })
     dbRefference.set(dbSnapshot);
