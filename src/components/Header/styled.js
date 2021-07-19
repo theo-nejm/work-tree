@@ -28,13 +28,17 @@ export const Container = styled.header`
     }
   }
 
-  .notifications {
+  .bell {
     fill: white;
 
-    height: 1.75rem;
-    width: 1.75rem;
+    height: 1.5rem;
+    width: 1.5rem;
 
     cursor: pointer;
+
+    padding: .25rem;
+    border: 2px solid white;
+    border-radius: .25rem;
   }
 `
 export const SearchWrapper = styled.div`

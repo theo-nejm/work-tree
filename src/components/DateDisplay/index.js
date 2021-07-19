@@ -3,6 +3,10 @@ import React from 'react';
 import { Container } from './styled';
 import { AiOutlineClockCircle } from 'react-icons/ai';
 
+import { firebaseDatabase } from '../../backend/config/firebaseConfig';
+
+const dbRefference = firebaseDatabase.ref(`state`)
+
 export default function DateDisplay(props) {
   function verifyDeadline() {
     const taskDeadlineArr = props.date.split('/'),
@@ -36,12 +40,24 @@ export default function DateDisplay(props) {
     color = 'inherit';
   }
 
+  async function getDeadlined() {
+    const dbSnapshot = (await dbRefference.get(`state`)).val()
+    const deadlineds = document.querySelectorAll('.deadlined')
+    const nOfDeadlineds = deadlineds.length
+
+    dbSnapshot.nOfDeadlineds = nOfDeadlineds
+    dbRefference.set(dbSnapshot)
+  }
+
+  const checklistClass = !verifyDeadline() && !props.isChecked ? 'deadlined' : 'undeadlined'
+
   return (
-    <Container color={color} bgColor={bgColor}>
+    <Container color={color} bgColor={bgColor} className={checklistClass}>
       <input
         type="checkbox"
         id={`check-${props.taskId}`}
         onChange={props.checkTask}
+        onClick={getDeadlined}
         checked={props.isChecked ? true : false}
       />
       <AiOutlineClockCircle />

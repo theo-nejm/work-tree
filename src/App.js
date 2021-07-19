@@ -41,7 +41,6 @@ export default class App extends React.Component {
         columns[column].taskIds = taskIds
       }
     }
-
       this.setState(data)
     });
   }

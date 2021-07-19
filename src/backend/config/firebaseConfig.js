@@ -1,6 +1,7 @@
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/database';
 
-export const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyD3sLdRDu2j_3tBbi3Dp_DZjxVczjdKaHg",
   authDomain: "tasks-management-b0d24.firebaseapp.com",
   databaseURL: "https://tasks-management-b0d24-default-rtdb.firebaseio.com",
@@ -12,4 +13,6 @@ export const firebaseConfig = {
 };
 
 export const firebaseImpl = firebase.initializeApp(firebaseConfig);
-export const firebaseDatabase = firebase.database();
+const firebaseDatabase = firebase.database();
+
+export { firebaseConfig, firebaseDatabase }
