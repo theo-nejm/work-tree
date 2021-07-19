@@ -1,5 +1,5 @@
 <center>
-  <h1>README - EN-US</h1>
+  <h1>README - PT-BR</h1>
 
   ![Imagem do projeto](https://i.imgur.com/ngJvyew.png)
 </center>
