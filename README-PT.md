@@ -18,3 +18,6 @@
 
 ### ➸ Como a experiência de arrastar e soltar, é usada uma biblioteca React chamada 'react-beautiful-dnd'.
 
+### ➸ Para a parte dos estilos, foi utilizada a biblioteca styled-components e, para os ícones, foi usada a react-icons.
+
+### ➸ Para mostrar as notificações, foi usada a biblioteca 'react-toastify'.
