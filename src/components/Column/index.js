@@ -44,7 +44,6 @@ export default class Column extends React.Component {
   removeSelf = async () => {
     const dbSnapshot = (await dbRefference.get(`state`)).val()
 
-    // console.log(Object.keys(dbSnapshot.columns))
     if(Object.keys(dbSnapshot.columns).length <= 1) {
       toast.error('Você precisa ter pelo menos uma coluna na sua Work Tree.')
       this.setState({

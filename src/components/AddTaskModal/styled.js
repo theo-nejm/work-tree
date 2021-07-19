@@ -8,6 +8,7 @@ export const Container = styled.div`
   height: 100vh;
   width: 100vw;
   position: fixed;
+  backface-visibility: hidden;
   background: rgba(0, 0, 0 , .5);
   top: 0;
   left: 0;
